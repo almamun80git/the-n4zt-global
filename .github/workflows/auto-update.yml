@@ -1,0 +1,29 @@
+name: Auto Update Repository
+
+on:
+  schedule:
+    - cron: "0 * * * *" # Runs every hour
+  workflow_dispatch: # Allows manual triggering of the workflow
+
+jobs:
+  update-repo:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Git
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+    - name: Pull latest changes
+      run: |
+        git pull origin main # Replace 'main' with your default branch if different
+
+    - name: Push changes to repository
+      run: |
+        git push origin main # Replace 'main' with your default branch if different
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
